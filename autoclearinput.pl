@@ -26,6 +26,7 @@ sub autoclear_key_pressed {
 
 sub autoclear_timeout {
 	return if (Irssi::settings_get_int("autoclear_sec") <= 0);
+	
 	Irssi::gui_input_set("");
 }
 
