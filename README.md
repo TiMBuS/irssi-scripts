@@ -1,4 +1,4 @@
-irssi-scripts
+autoclearinput.pl
 =============
 
-irssi scripts which I have authored or contributed to.
+Automatically clears pending input after a configurable duration of idling.
