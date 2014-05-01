@@ -3,11 +3,11 @@
 #	Automatically clears pending input when you are away.
 #
 #
+#  Commands:
+#	/AUTOCLEARED  [Retrieve the last cleared line of input]
+#
 #  Settings:
 #	/SET autoclear_sec <seconds>  [0 to disable]
-#
-#  TODO:
-#	Store cleared input, allow retrieval via a command.
 #
 
 use strict;
@@ -33,20 +33,44 @@ sub autoclear_key_pressed {
 		Irssi::timeout_remove($autoclear_tag);
 	}
 
-	$autoclear_tag = Irssi::timeout_add(Irssi::settings_get_int("autoclear_sec") * 1000, "autoclear_timeout", "");
+	$autoclear_tag = Irssi::timeout_add_once(Irssi::settings_get_int("autoclear_sec") * 1000, "autoclear_timeout", "");
 }
 
 sub autoclear_timeout {
 	return if (Irssi::settings_get_int("autoclear_sec") <= 0);
-	
+
+	my $autoclear_current_input = Irssi::parse_special('$L');
+	$autoclear_current_input =~ s/^\s+//;
+	$autoclear_current_input =~ s/\s+$//;
+	if ($autoclear_current_input ne "") {
+		$autoclear_last_input = Irssi::parse_special('$L');
+	}
+
 	Irssi::gui_input_set("");
+}
+
+sub autoclear_retrieve {
+	if (defined($autoclear_last_input)) {
+		Irssi::timeout_add_once(50, "autoclear_retrieve_workaround", "");
+	} else {
+		Irssi::print($IRSSI{name} . ': No input has been cleared yet.');
+	}
+}
+
+sub autoclear_retrieve_workaround {
+	return if (!defined($autoclear_last_input));
+
+	Irssi::gui_input_set($autoclear_last_input);
+	Irssi::gui_input_set_pos(length($autoclear_last_input));
 }
 
 Irssi::settings_add_int("misc", "autoclear_sec", 30);
 Irssi::signal_add_last("gui key pressed", "autoclear_key_pressed");
+Irssi::command_bind("autocleared", "autoclear_retrieve");
 
 print $IRSSI{name} . ': v' .  $VERSION . ' loaded. Pending input ' .
 	(Irssi::settings_get_int("autoclear_sec") > 0
 	? ('will be cleared after %9' . Irssi::settings_get_int("autoclear_sec") . ' seconds%9 of idling.')
 	: 'clearing is currently %9disabled%9.');
 print $IRSSI{name} . ': Configure this delay with: /SET autoclear_sec <seconds>  [0 to disable]';
+print $IRSSI{name} . ': Retrieve the last cleared line of input with: /AUTOCLEARED';
