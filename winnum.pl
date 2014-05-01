@@ -26,13 +26,11 @@ sub winnum_default_command {
 
 	$command =~ s/^\s+//;
 	$command =~ s/\s+$//;
-	my $winnum = ($command =~ /(\w+)/g)[0];
+	my $winnum = ($command =~ /(\w+)/)[0];
 
-	if ($winnum ne "" && $winnum =~ /^\d+$/) {
+	if ($winnum =~ /^\d+$/) {
 		my $window = Irssi::window_find_refnum($winnum);
-		if ($window) {
-			$window->set_active();
-		}
+		$window->set_active if $window;
 
 		Irssi::signal_stop();
 	}
