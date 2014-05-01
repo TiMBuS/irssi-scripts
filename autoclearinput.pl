@@ -3,11 +3,11 @@
 #	Automatically clears pending input when you are away.
 #
 #
-#  Commands:
-#	/AUTOCLEARED  [Retrieve the last cleared line of input]
-#
 #  Settings:
 #	/SET autoclear_sec <seconds>  [0 to disable]
+#
+#  Commands:
+#	/AUTOCLEARED  [Retrieve the last cleared line of input]
 #
 
 use strict;
