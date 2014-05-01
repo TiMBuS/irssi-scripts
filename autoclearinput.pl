@@ -1,3 +1,15 @@
+#
+#  autoclearinput.pl
+#	Automatically clears pending input when you are away.
+#
+#
+#  Settings:
+#	/SET autoclear_sec <seconds>  [0 to disable]
+#
+#  TODO:
+#	Store cleared input, allow retrieval via a command.
+#
+
 use strict;
 use vars qw($VERSION %IRSSI);
 
