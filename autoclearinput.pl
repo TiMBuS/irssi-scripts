@@ -24,7 +24,7 @@ $VERSION = '1.0.0';
 	changed         => '2014-05-01'
 );
 
-my ($autoclear_tag);
+my ($autoclear_tag, $autoclear_last_input);
 
 sub autoclear_key_pressed {
 	return if (Irssi::settings_get_int("autoclear_sec") <= 0);
